@@ -1,3 +1,61 @@
+<?php
+// include 'connection.php';
+
+session_start();
+
+$email_warning = "";
+
+if (isset($_POST['email'])) {
+
+
+    $email = $_POST['email'];
+    $error = false;
+
+    $query = "SELECT * FROM user WHERE email = '$email'";
+
+
+    try {
+
+        $dbname = 'wallet';
+        $servername = 'localhost';
+        $user = 'root';
+        $password = '';
+
+
+        $db = new PDO(
+            "mysql:dbname=$dbname; host=$servername",
+            $user,
+            $password
+        );
+
+        $res = $db->query($query);
+        $erg = $res->fetchAll(PDO::FETCH_ASSOC);
+
+
+        // var_dump($erg);
+        // echo $erg[0]['email'];
+
+        if (!$erg) {
+            $email_warning =  "email ist invalid";
+        } else {
+            header('location:user_password_update.php');
+        }
+
+
+        $dbh = null;
+    } catch (PDOException $e) {
+
+        echo "<br>" . $e->getMessage();
+    }
+} else {
+    $_POST['newpassword'] = NULL;
+    $_POST['email'] = NULL;
+}
+
+?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="dark">
@@ -21,7 +79,15 @@
             <form action="" method="POST">
                 <p><input type="text" placeholder="Email" name="email"></p>
 
+
+
+                <?php
+                if ($email_warning != "") {
+                    echo '<div class="alert alert-danger" role="alert"> ' . $email_warning . '</div>';
+                }
+                ?>
                 <p><input type="submit" id="button" </p>
+
             </form>
         </div>
     </div>
@@ -29,72 +95,3 @@
 </body>
 
 </html>
-
-
-
-<?php
-// include 'connection.php';
-
-session_start();
-
-if (isset($_POST['email'])) {
-
-
-    $email = $_POST['email'];
-    $error = false;
-
-    $query = "SELECT * FROM user WHERE email = '$email'";
-
-    try {
-
-        $dbname = 'wallet';
-        $servername = 'localhost';
-        $user = 'root';
-        $password = '';
-
-
-        $db = new PDO(
-            "mysql:dbname=$dbname; host=$servername",
-            $user,
-            $password
-        );
-
-        echo "Verbindung erfolgreich hergestellt! <br>";
-
-        $res = $db->query($query);
-        $erg = $res->fetchAll(PDO::FETCH_ASSOC);
-
-
-        if (!$erg) {
-            echo "Datei nicht im DB";
-        } else {
-
-            foreach ($erg as $el) {
-
-                echo $el['email'];
-
-                if ($email == $el['email']) {
-                    header('location:user_password_update.php');
-                    $error = false;
-                } else {
-                    echo "geben sie eine gültiger email adresse";
-                    $error = true;
-                }
-            }
-            echo "Bitte geben sie eine gültiger email";
-        }
-
-        $dbh = null;
-
-
-    } catch (PDOException $e) {
-
-        echo "<br>" . $e->getMessage();
-    }
-} else {
-    $_POST['newpassword'] = NULL;
-    $_POST['email'] = NULL;
-}
-
-?>
-

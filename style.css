@@ -1,0 +1,17 @@
+body {
+    text-align: center;
+    padding: 50px;
+}form{
+    width: 500px;
+    display: inline-block;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+p{
+    padding:20px;
+}
+h1,h3{
+    padding-bottom: 30px;
+    text-shadow: 0 0 3px #0000ff;
+}

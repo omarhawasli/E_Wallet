@@ -10,13 +10,8 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
     $password = $_POST['password'];
     $error = false;
 
-    
 
-
-    $query = "SELECT * FROM user WHERE email = '$email'";
-
-
-
+    $query = "SELECT * FROM user WHERE email = '$email' OR password = $password";
 
 
     try {
@@ -37,9 +32,6 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
         $res = $db->query($query);
         $erg = $res->fetchAll(PDO::FETCH_ASSOC);
 
-        // var_dump($erg[0]['password']);
-
-
         if (empty($email) && empty($password)) {
             $password_warning = "Email und Password sind Leer, bitte geben sie eine ein";
         } else if (empty($email)) {
@@ -49,25 +41,18 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
             $password_warning = "Password ist Leer!";
         }
 
+
+        #checking ob die email-adresse nur einmal in Database ist
+
         $hashed = $erg[0]['password'];
-        echo $hashed . "<br> ";
-
-
-        if(password_verify($password, $hashed)){
-            echo 'Password is valid!';
-        } else {
-            echo 'Invalid password..........';
-        }
-
-
 
         if (count($erg) >= 1) {
 
-            if ($erg[0]['password'] !== $password || !$verify) {
+            if (!password_verify($password, $hashed)) {
                 $password_warning =  "Password ist invalid";
             } else{
                 $_SESSION['Login'] = true;
-                header('location:../views/ausweiss.php');
+                header('location:../auswies/ausweiss_from.php');
                 // SESSIONS SETZEN
                 // REDIRECT TO USER START 
             }

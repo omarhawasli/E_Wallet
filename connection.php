@@ -1,24 +1,20 @@
-<?php
+<?php 
 
+# server name
+$sName = "localhost";
+# user name
+$uName = "root";
+# password
+$pass = "";
+
+# database name
+$db_name = "wallet";
+
+#creating database connection
 try {
-
-    $dbname = 'wallet';
-    $servername = 'localhost';
-    $user = 'root';
-    $password = '';
-
-
-    $db = new PDO(
-        "mysql:dbname=$dbname; host=$servername",
-        $user,
-        $password
-    );
-
-    echo "Verbindung erfolgreich hergestellt! <br>";
-
-    // $db->query($sql);
-    // $dbh = null;
-} catch (PDOException $e) {
-
-    echo "<br>" . $e->getMessage();
+    $dbh = new PDO("mysql:host=$sName;dbname=$db_name", 
+              $uName, $pass);
+    $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+}catch(PDOException $e){
+  echo "Connection failed : ". $e->getMessage();
 }

@@ -3,6 +3,8 @@
 
 session_start();
 
+$password_warning = "";
+
 if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['password2'])) {
 
     $email = $_POST['email'];
@@ -11,10 +13,6 @@ if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['passwor
     $error = false;
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-
-
-
 
 
     // check ob email schon vorhanden ist?
@@ -41,8 +39,9 @@ if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['passwor
         $erg = $rueckgabe->fetchAll(PDO::FETCH_ASSOC);
 
         if (count($erg) >= 1) {
-            echo "Die email ist schon vergeben";
-            echo "<form action='http://localhost//php/Walet/users/User_Register.php'><button type='submit'>Zurück</button></form>";
+            $error_war = "Die email ist schon vergeben";
+            echo '<div class="alert alert-danger" role="alert"> ' .  $error_war . '</div>';
+            echo "<form action='http://localhost//php/Wallet/users/user_register.php'><button type='submit'>Zurück</button></form>";
             exit();
         } else {
             //...........
@@ -65,17 +64,20 @@ if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['passwor
 
 
     if ((!password_verify($password2, $hashedPassword))) {
-        echo "the password dosent match";
-        $error = true;
+        $password_warning = "The password dosent match";
+        
+        echo '<div class="alert alert-danger" role="alert"> ' .  $password_warning . '</div>';
+        echo "<form action='http://localhost//php/Wallet/users/user_register.php'><button type='submit'>Zurück</button></form>";
+        exit();
     } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo 'Please enter a valid email address';
-        $error = true;
+        $password_warning = 'Please enter a valid email address';
+        exit();
     } else if (empty($password)) {
-        echo 'Please provide a password';
-        $error = true;
+        $password_warning = 'Please provide a password';
+        exit();
     } else if ($password2 != $password) {
-        echo 'The passwords must match';
-        $error = true;
+        $password_warning = 'The passwords must match';
+        exit();
     } else {
         header('location:../users/user_login.php');
     }
@@ -139,7 +141,11 @@ if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['passwor
 
                     <p><label for="username">Password</label></p>
                     <p><input class="form-control" type="text" type="text" name="password2"></p>
-
+                    <?php
+                    if ($password_warning != "") {
+                        echo '<div class="alert alert-danger" role="alert"> ' .  $password_warning . '</div>';
+                    }
+                    ?>
                     <p><input class="btn btn-outline-primary" type="submit"></p>
                 </form>
                 <p>Have an account? <a class="text-decoration-none" href="user_login.php">Sign In</a></p>

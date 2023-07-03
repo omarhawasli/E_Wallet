@@ -3,15 +3,20 @@
 
 session_start();
 
+$password_match = "";
+$leere_email = "";
+
 if (isset($_POST['newpassword']) && isset($_POST['newpassword2'])) {
+
     $newpassword = $_POST['newpassword'];
     $newpassword2 = $_POST['newpassword2'];
     $email = $_POST['email'];
+    $hashedPassword = password_hash($newpassword, PASSWORD_DEFAULT);
 
     // $userid = $_SESSION['userid'];
     $error = false;
 
-    $sql = "UPDATE user SET password ='$newpassword' WHERE email = '$email' ;";
+    $sql = "UPDATE user SET password ='$hashedPassword' WHERE email = '$email' ;";
 
 
     try {
@@ -30,15 +35,17 @@ if (isset($_POST['newpassword']) && isset($_POST['newpassword2'])) {
 
         // echo "Verbindung erfolgreich hergestellt! <br>";
 
-    if($newpassword != $newpassword2){
-        echo "Passwörte sollen abgestimmt werden";
-    }else if(empty($email)){
-        echo "Ein email muss eingegeben werden";
-    }else{
-        header('location:ausweiss.php');
-    }
-
         $res = $db->query($sql);
+
+        if ($newpassword != $newpassword2) {
+            $password_match = "Passwörte sollen abgestimmt werden";
+        } else if (empty($email)) {
+            $leere_email = "Ein email muss eingegeben werden";
+        } else {
+            header('location:user_login.php');
+        }
+
+
         $dbh = null;
 
         // $db->query($sql);
@@ -80,6 +87,15 @@ if (isset($_POST['newpassword']) && isset($_POST['newpassword2'])) {
                 <p><input type="text" name="newpassword"></p>
                 <p><label for="newpassword">New password</label></p>
                 <p><input type="text" name="newpassword2"></p>
+
+                <?php
+                if ($password_match != "") {
+                    echo '<div class="alert alert-danger" role="alert"> ' .  $password_match . '</div>';
+                } else if ($leere_email  != "") {
+                    echo '<div class="alert alert-danger" role="alert"> ' .  $leere_email . '</div>';
+                }
+                ?>
+
                 <p><input type="submit" id="button" </p>
             </form>
         </div>
@@ -88,4 +104,3 @@ if (isset($_POST['newpassword']) && isset($_POST['newpassword2'])) {
 </body>
 
 </html>
-
