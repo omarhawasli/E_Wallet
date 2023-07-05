@@ -1,14 +1,15 @@
 <?php
 session_start();
 session_destroy();
+$_SESSION['Login'] = false;
 
-if (!isset($_SESSION['userid'])) {
-    header('location:login.php');
+
+if (!$_SESSION['Login']) {
+    header('location:../users/user_login.php');
 } else {
-    $userid = $_SESSION['userid'];
-    echo "Willkommen";
+    $userid = $_SESSION['Login'];
 }
 
-$_SESSION['Login'] = true;
+
 
 echo "Logout erfolgreich";

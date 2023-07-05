@@ -9,6 +9,7 @@
 
     <?php include '../helpers/bootstrap.php'; ?>
     <?php include '../helpers/darkmodes.php'; ?>
+
 </head>
 
 <body>

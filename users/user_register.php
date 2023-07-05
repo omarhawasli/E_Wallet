@@ -3,7 +3,8 @@
 
 session_start();
 
-$password_warning = "";
+$confirm_password_err = "";
+$error_war = "";
 
 if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['password2'])) {
 
@@ -38,15 +39,12 @@ if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['passwor
         $rueckgabe = $dbh->query($sql);
         $erg = $rueckgabe->fetchAll(PDO::FETCH_ASSOC);
 
-        if (count($erg) >= 1) {
-            $error_war = "Die email ist schon vergeben";
-            echo '<div class="alert alert-danger" role="alert"> ' .  $error_war . '</div>';
-            echo "<form action='http://localhost//php/Wallet/users/user_register.php'><button type='submit'>Zurück</button></form>";
-            exit();
-        } else {
-            //...........
-        }
+        // var_dump(count($erg));
+        // die();
 
+        if (count($erg) >= 1) {
+            $error_war = "Email is already Registered";
+        }
         $dbh = null;
     } catch (PDOException $e) {
 
@@ -54,55 +52,49 @@ if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['passwor
     };
 
 
+    if (empty($error_war)) {
 
-    // Insert neue user
+        if ((!password_verify($password2, $hashedPassword))) {
+            $confirm_password_err = "Password dosen't Match";
+        } else if (empty($email) && empty($password)) {
+            $confirm_password_err = 'Please enter Email and Password';
+        } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $confirm_password_err = 'Please enter a valid email address';
+        } else if (empty($password)) {
+            $confirm_password_err = 'Please provide a Password';
+        } else {
+            header('location:../users/user_login.php');
+        }
 
-    $sql = "INSERT INTO user(email, password) Values('$email','$hashedPassword');";
-
-
-    //hashed passwort
-
-
-    if ((!password_verify($password2, $hashedPassword))) {
-        $password_warning = "The password dosent match";
-        
-        echo '<div class="alert alert-danger" role="alert"> ' .  $password_warning . '</div>';
-        echo "<form action='http://localhost//php/Wallet/users/user_register.php'><button type='submit'>Zurück</button></form>";
-        exit();
-    } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $password_warning = 'Please enter a valid email address';
-        exit();
-    } else if (empty($password)) {
-        $password_warning = 'Please provide a password';
-        exit();
-    } else if ($password2 != $password) {
-        $password_warning = 'The passwords must match';
-        exit();
-    } else {
-        header('location:../users/user_login.php');
-    }
-
-    try {
-
-        $dbname = 'wallet';
-        $servername = 'localhost';
-        $user = 'root';
-        $passwordDB = '';
+        // Insert neue user
 
 
-        $db = new PDO(
-            "mysql:dbname=$dbname; host=$servername",
-            $user,
-            $passwordDB
-        );
+        if (empty($confirm_password_err)) {
 
-        // echo "Verbindung erfolgreich hergestellt! <br>";
+            $sql = "INSERT INTO user(email, password) Values('$email','$hashedPassword');";
 
-        $db->query($sql);
-        $dbh = NULL;
-    } catch (PDOException $e) {
+            //hashed passwort
 
-        echo "<br>" . $e->getMessage();
+            try {
+
+                $dbname = 'wallet';
+                $servername = 'localhost';
+                $user = 'root';
+                $passwordDB = '';
+
+                $db = new PDO(
+                    "mysql:dbname=$dbname; host=$servername",
+                    $user,
+                    $passwordDB
+                );
+
+                $db->query($sql);
+                $dbh = NULL;
+            } catch (PDOException $e) {
+
+                echo "<br>" . $e->getMessage();
+            }
+        }
     }
 } else {
     $_POST['username'] = NULL;
@@ -123,30 +115,44 @@ if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['passwor
     <?php include '../helpers/bootstrap.php'; ?>
     <?php include '../helpers/darkmodes.php'; ?>
 
+
+    <!-- <style>
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital@1&display=swap');
+
+        body {
+            font-family: Ubuntu Mono, monospace;
+        } -->
+    </style>
+
+
+
+
 </head>
 
 <body>
     <section>
-        <div class="container py-5 border mt-5 d-flex justify-content-center h-100 shadow p-3 mb-5 bg-body-tertiary rounded">
-            <div>
-                <h1 class="h1">Register</h1>
+        <div class="p-3 d-flex justify-content-center mt-5 h-50">
 
+            <div>
+                <div class="h1 container py-5 d-flex justify-content-center text-primary">Make IT Easy</div>
+                <div class="h3">Register</div>
 
                 <form action="" method="POST">
-                    <p><label for="username">Email</label></p>
-                    <p><input class="form-control" type="text" type="email" name="email"></p>
+                    <p><label class="" for="username">Enter Your Email Address</label></p>
+                    <p><input class="form-control " type="text" type="email" name="email"></p>
 
-                    <p><label for="username">Password</label></p>
-                    <p><input class="form-control" type="text" type="text" name="password"></p>
+                    <p><label for="username">Enter New password</label></p>
+                    <p><input class="form-control" type="password" type="text" name="password"></p>
 
-                    <p><label for="username">Password</label></p>
-                    <p><input class="form-control" type="text" type="text" name="password2"></p>
-                    <?php
-                    if ($password_warning != "") {
-                        echo '<div class="alert alert-danger" role="alert"> ' .  $password_warning . '</div>';
-                    }
-                    ?>
-                    <p><input class="btn btn-outline-primary" type="submit"></p>
+                    <p><label for="username">Re-Enter New password</label></p>
+                    <p><input class="form-control" type="password" type="texpasswordt" name="password2"></p>
+                    <?php if (!empty($confirm_password_err)) {
+                        echo '<div class="alert alert-danger" role="alert"> ' .  $confirm_password_err . '</div>';
+                    } ?>
+                    <?php if (!empty($error_war)) {
+                        echo '<div class="alert alert-danger" role="alert"> ' .  $error_war . '</div>';
+                    } ?>
+                    <p><input class="btn btn-outline-secondary" type="submit"></p>
                 </form>
                 <p>Have an account? <a class="text-decoration-none" href="user_login.php">Sign In</a></p>
             </div>

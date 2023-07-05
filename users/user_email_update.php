@@ -36,7 +36,7 @@ if (isset($_POST['email'])) {
         // echo $erg[0]['email'];
 
         if (!$erg) {
-            $email_warning =  "email ist invalid";
+            $email_warning = "email ist invalid";
         } else {
             header('location:user_password_update.php');
         }
@@ -74,19 +74,12 @@ if (isset($_POST['email'])) {
     <div class="container py-5 border mt-5 d-flex justify-content-center h-100 shadow p-3 mb-5 bg-body-tertiary rounded">
         <div>
             <h1 class="h4">Trouble logging in?</h1>
-            <p>enter your email adresse</p>
+            <p>Enter Your Email Address</p>
 
             <form action="" method="POST">
-                <p><input type="text" placeholder="Email" name="email"></p>
-
-
-
-                <?php
-                if ($email_warning != "") {
-                    echo '<div class="alert alert-danger" role="alert"> ' . $email_warning . '</div>';
-                }
-                ?>
-                <p><input type="submit" id="button" </p>
+                <p><input class="form-control" type="text" placeholder="Email" name="email"></p>
+                <?php if(!empty($email_warning)) { echo '<div class="alert alert-danger" role="alert"> ' . $email_warning . '</div>';}?>
+                <p><input class="btn btn-outline-secondary" type="submit" id="button" </p>
 
             </form>
         </div>

@@ -37,10 +37,12 @@ if (isset($_POST['newpassword']) && isset($_POST['newpassword2'])) {
 
         $res = $db->query($sql);
 
-        if ($newpassword != $newpassword2) {
-            $password_match = "Passwörte sollen abgestimmt werden";
-        } else if (empty($email)) {
-            $leere_email = "Ein email muss eingegeben werden";
+        if (empty($email)){
+            $leere_email = "Email  is empty";
+        } else if (empty($password)) {
+            $leere_email = "Password is empty";
+        } else if ($newpassword != $newpassword2) {
+            $password_match = "Password dosen't Match";
         } else {
             header('location:user_login.php');
         }
@@ -77,27 +79,27 @@ if (isset($_POST['newpassword']) && isset($_POST['newpassword2'])) {
 <body>
     <div class="container py-5 border mt-5 d-flex justify-content-center h-100 shadow p-3 mb-5 bg-body-tertiary rounded">
         <div>
-            <h1 class="h4">Trouble logging in?</h1>
-            <p>enter your email and new password</p>
+            <h1 class="h1">Trouble logging in?</h1>
+            <h5>Enter Your Email and New Password</h4>
 
-            <form action="" method="POST">
-                <p><label for="email">email</label></p>
-                <p><input type="text" name="email"></p>
-                <p><label for="newpassword">New password</label></p>
-                <p><input type="text" name="newpassword"></p>
-                <p><label for="newpassword">New password</label></p>
-                <p><input type="text" name="newpassword2"></p>
+                <form action="" method="POST">
+                    <p><label for="email">Enter Your Email Address</label></p>
+                    <p><input class="form-control" type="text" name="email"></p>
+                    <p><label for="newpassword">Enter New password</label></p>
+                    <p><input class="form-control" type="password" name="newpassword"></p>
+                    <p><label for="newpassword">Re-Enter New password</label></p>
+                    <p><input class="form-control" type="password" name="newpassword2"></p>
 
-                <?php
-                if ($password_match != "") {
-                    echo '<div class="alert alert-danger" role="alert"> ' .  $password_match . '</div>';
-                } else if ($leere_email  != "") {
-                    echo '<div class="alert alert-danger" role="alert"> ' .  $leere_email . '</div>';
-                }
-                ?>
+                    <?php
+                    if (!empty($password_match)) {
+                        echo '<div class="alert alert-danger" role="alert"> ' .  $password_match . '</div>';
+                    } else if (!empty($leere_email)) {
+                        echo '<div class="alert alert-danger" role="alert"> ' .  $leere_email . '</div>';
+                    }
+                    ?>
 
-                <p><input type="submit" id="button" </p>
-            </form>
+                    <p><input class="btn btn-outline-secondary" type="submit" id="button" </p>
+                </form>
         </div>
     </div>
 
