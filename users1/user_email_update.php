@@ -36,7 +36,7 @@ if (isset($_POST['email'])) {
         // echo $erg[0]['email'];
 
         if (!$erg) {
-            $email_warning = "email ist invalid";
+            $email_warning =  "email ist invalid";
         } else {
             header('location:user_password_update.php');
         }
@@ -66,12 +66,12 @@ if (isset($_POST['email'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <?php include '../helpers/bootstrap.php'; ?>
-    <!-- <?php include '../helpers/darkmodes.php'; ?> -->
+    <?php include '../helpers/darkmodes.php'; ?>
 
 </head>
 
 <body>
-    <div class="container py-5 border mt-5 d-flex justify-content-center h-100 shadow p-3 mb-5 bg-body-tertiary rounded w-25 p-3">
+    <div class="container py-5 border mt-5 d-flex justify-content-center h-100 shadow p-3 mb-5 bg-body-tertiary rounded">
         <div>
             <h1 class="h4">Trouble logging in?</h1>
             <p>Enter Your Email Address</p>

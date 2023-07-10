@@ -11,18 +11,23 @@ if (
 
 	# get data from POST request and store them in var
 	$ausweis_Nr = $_POST['ausweissnummer'];
+	session_start();
+	$_SESSION['ausweissnummer'] = $ausweis_Nr; //
+	
+    
 	$name = $_POST['name'];
 	$vorname = $_POST['vorname'];
 	$geschlecht = $_POST['geschlecht'];
 	$geburstag = $_POST['geburstag'];
 	$geburstort = $_POST['geburstort'];
 	$Staatsangehoerigkeit = $_POST['Staatsangehoerigkeit'];
-	$große = $_POST['große'];
+	$ablauf_datum = $_POST['ablauf_datum'];
 	$straße = $_POST['straße'];
 	$haus_Nr = $_POST['haus_Nr'];
 	$plz = $_POST['plz'];
 	$ort = $_POST['ort'];
-
+	$_SESSION['name'] = $name;
+	$_SESSION['vorname'] = $vorname;
 
 	#  Picture Uploading
 	if (isset($_FILES['bild'])) {
@@ -72,26 +77,41 @@ if (
 			}
 		}
 	}
+   if(true){
+	
+	$email = $_SESSION['email'];
+	$user_id = "SELECT user_id FROM user WHERE email = '$email'";
 
 
+	$rueckgabe = $dbh->query($user_id);
+	$erg = $rueckgabe->fetchAll(PDO::FETCH_ASSOC);
+	$user_id = $erg[0]['user_id'];
+    $_SESSION['user_id'] = $user_id;
+
+
+	 }
+	
 	# if the user upload  Picture
 	if (isset($new_img_name)) {
-
+		
 		# inserting data into database
-		$sql = "INSERT INTO `ausweiss`(`ausweiss_Nr`, `name`, `vorname`,`geschlecht`, `geburtstag`, `geburtsort`,
-			  `staatsangehoerigkeit`, `große`, `Strasse`, `hausnummer`, `plz`, `ort`, `bild`) 
-			 VALUES ('$ausweis_Nr','$name','$vorname','$geschlecht','$geburstag','$geburstort',
-			 '$Staatsangehoerigkeit','$große','$straße','$haus_Nr','$plz','$ort','$img_upload_path');";
+		$sql = "INSERT INTO `ausweiss`(`ausweiss_Nr`, `user_id`, `name`, `vorname`,`geschlecht`, `geburtstag`, `geburtsort`,
+			  `staatsangehoerigkeit`, `ablauf_datum`, `Strasse`, `hausnummer`, `plz`, `ort`, `bild`) 
+			 VALUES ('$ausweis_Nr','$user_id','$name','$vorname','$geschlecht','$geburstag','$geburstort',
+			 '$Staatsangehoerigkeit','$ablauf_datum','$straße','$haus_Nr','$plz','$ort','$img_upload_path');";
+		
 		$dbh->query($sql);
+		$dbh = null;
 
 	# success message
 	}
+
+
 
 	# redirect to 'index.php' and passing success message
 	header("Location:karten_auswahl.php");
 	exit;
 } else {
-	echo "errre25525222525252525";
 	header("Location:ausweiss.php");
 	exit;
 }

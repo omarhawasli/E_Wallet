@@ -21,23 +21,21 @@ form {
     padding-top: 25px;
     padding-bottom: 25px;
 }
-h1{ padding-top: 35px;
-    padding-bottom: 30px;
-    text-shadow: 0 0 3px #0000ff;
-}
+
     </style>
 
 </head>
 <body  >
+<h1 class=" h1 container mt-2 py-4 d-flex justify-content-center h-500  p-3 mb-2 bg-body-tertiary rounded" >Ausweiß formula</h1>
     
-    <div style="align-items: center;">
-         <h1>Ausweiß formula</h1>
+    <div class="container py-5 border mt-2 d-flex justify-content-center h-100 shadow p-3 mb-5 bg-body-tertiary rounded w-25 p-3">
+         
         <form  action="ausweis_control.php" method="POST" enctype="multipart/form-data">
 
         
 
             <p><label class="form-label" for="name">Ausweiß Nummer *</label></p>
-            <p><input class="form-control" type="text" name="ausweissnummer" required></p>
+            <p><input class="form-control" type="text" name="ausweissnummer"  maxlength="9" required></p>
 
             <p><label class="form-label" for="name">Name *</label></p>
             <p><input class="form-control" type="text" name="name" required></p>
@@ -60,8 +58,8 @@ h1{ padding-top: 35px;
             <p><label class="form-label" for="name">Staatsangehörigkeit *</label></p>
             <p><input class="form-control" type="text" name="Staatsangehoerigkeit" required></p>
 
-            <p><label class="form-label" for="name">Große(cm) *</label></p>
-            <p><input class="form-control" type="text" name="große" required></p>
+            <p><label class="form-label" for="name">Ablauf datum *</label></p>
+            <p><input class="form-control" type="date" name="ablauf_datum" required></p>
 
             <p><label class="form-label" for="name">Straße *</label></p>
             <p><input class="form-control" type="text" name="straße" required></p>
@@ -80,7 +78,7 @@ h1{ padding-top: 35px;
 	         <input class="form-control"  type="file" name="bild"  ><br>
 	         
     
-            <button class="form-control" style="margin-top: 20px;" type="submit" name="Senden">Senden</button>
+            <button class="btn btn-outline-secondary" style="margin-top: 20px;" type="submit" name="Senden">Senden</button>
             
         </form>
     </div>

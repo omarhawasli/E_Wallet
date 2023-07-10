@@ -13,6 +13,9 @@ if (isset($_POST['newpassword']) && isset($_POST['newpassword2'])) {
     $email = $_POST['email'];
     $hashedPassword = password_hash($newpassword, PASSWORD_DEFAULT);
 
+    // $userid = $_SESSION['userid'];
+    $error = false;
+
     $sql = "UPDATE user SET password ='$hashedPassword' WHERE email = '$email' ;";
 
 
@@ -34,10 +37,10 @@ if (isset($_POST['newpassword']) && isset($_POST['newpassword2'])) {
 
         $res = $db->query($sql);
 
-        if (empty($email)){
-            $leere_email = "Email  is empty";
-        } else if ($newpassword != $newpassword2) {
-            $password_match = "Password dosen't Match";
+        if ($newpassword != $newpassword2) {
+            $password_match = "Passwörte sollen abgestimmt werden";
+        } else if (empty($email)) {
+            $leere_email = "Ein email muss eingegeben werden";
         } else {
             header('location:user_login.php');
         }
@@ -67,34 +70,34 @@ if (isset($_POST['newpassword']) && isset($_POST['newpassword2'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <?php include '../helpers/bootstrap.php'; ?>
-    <!-- <?php include '../helpers/darkmodes.php'; ?> -->
+    <?php include '../helpers/darkmodes.php'; ?>
 
 </head>
 
 <body>
-    <div class="container py-5 border mt-5 d-flex justify-content-center h-100 shadow p-3 mb-5 bg-body-tertiary rounded w-25 p-3" >
+    <div class="container py-5 border mt-5 d-flex justify-content-center h-100 shadow p-3 mb-5 bg-body-tertiary rounded">
         <div>
             <h1 class="h1">Trouble logging in?</h1>
             <h5>Enter Your Email and New Password</h4>
 
-                <form action="" method="POST">
-                    <p><label for="email">Enter Your Email Address</label></p>
-                    <p><input class="form-control" type="text" name="email"></p>
-                    <p><label for="newpassword">Enter New password</label></p>
-                    <p><input class="form-control" type="password" name="newpassword"></p>
-                    <p><label for="newpassword">Re-Enter New password</label></p>
-                    <p><input class="form-control" type="password" name="newpassword2"></p>
+            <form action="" method="POST">
+                <p><label for="email">Enter Your Email Address</label></p>
+                <p><input class="form-control"  type="text" name="email"></p>
+                <p><label for="newpassword">Enter New password</label></p>
+                <p><input class="form-control"  type="password" name="newpassword"></p>
+                <p><label for="newpassword">Re-Enter New password</label></p>
+                <p><input class="form-control"  type="password" name="newpassword2"></p>
 
-                    <?php
-                    if (!empty($password_match)) {
-                        echo '<div class="alert alert-danger" role="alert"> ' .  $password_match . '</div>';
-                    } else if (!empty($leere_email)) {
-                        echo '<div class="alert alert-danger" role="alert"> ' .  $leere_email . '</div>';
-                    }
-                    ?>
+                <?php
+                if (!empty($password_match)) {
+                    echo '<div class="alert alert-danger" role="alert"> ' .  $password_match . '</div>';
+                } else if (!empty($leere_email)) {
+                    echo '<div class="alert alert-danger" role="alert"> ' .  $leere_email . '</div>';
+                }
+                ?>
 
-                    <p><input class="btn btn-outline-secondary" type="submit" id="button" </p>
-                </form>
+                <p><input class="btn btn-outline-secondary" type="submit" id="button" </p>
+            </form>
         </div>
     </div>
 
